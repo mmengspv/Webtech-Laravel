@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Apartment extends Model
+{
+    use HasFactory;
+    use SoftDeletes;
+
+    protected $attribute = [
+        'name' => "",
+        'floors' => 0
+    ];
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class);
+    }
+}
