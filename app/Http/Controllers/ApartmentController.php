@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Apartment;
+use App\Models\Room;
 use Illuminate\Http\Request;
 
 class ApartmentController extends Controller
@@ -14,7 +15,7 @@ class ApartmentController extends Controller
      */
     public function index()
     {
-        $apartments = Apartment::get();
+        $apartments = Apartment::with('rooms')->get();
         return view("apartments.index", ['apartments' => $apartments]);
     }
 
@@ -26,6 +27,17 @@ class ApartmentController extends Controller
     public function create()
     {
         return view('apartments.create');
+    }
+
+    /**
+     * Show form to create new room in this apartment
+     * 
+     * @param $apartment_id
+     */
+    public function createRoom($apartment_id)
+    {
+        $apartment = Apartment::findOrFail($apartment_id);
+        return view('apartments.create-room', ['apartment' => $apartment, 'room_types' => Room::$room_types]);
     }
 
     /**
@@ -51,7 +63,7 @@ class ApartmentController extends Controller
      */
     public function show($id)
     {
-        $apartment = Apartment::findOrfail($id);
+        $apartment = Apartment::with('rooms')->findOrFail($id);
         return view('apartments.show', ['apartment' => $apartment]);
     }
 

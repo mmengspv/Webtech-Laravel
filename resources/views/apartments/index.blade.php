@@ -8,6 +8,7 @@
             <tr>
                 <th>Name</th>
                 <th>Floors</th>
+                <th>Rooms</th>
                 <th>Created At</th>
             </tr>
         </thead>
@@ -20,6 +21,7 @@
                         </a>
                     </td>
                     <td>{{$apartment->floors}}</td>
+                    <td>{{$apartment->rooms->count()}}</td>
                     <td title="{{$apartment->created_at}}">{{$apartment->created_at->diffForHumans()}}</td>
                 </tr>
             @endforeach
