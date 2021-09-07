@@ -12,7 +12,7 @@
 
 <body>
     <div>
-        Menu
+        @include('layouts.menu')
     </div>
     <div class="container mx-auto">
         @yield('content')

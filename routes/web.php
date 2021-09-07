@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\ApartmentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,3 +25,5 @@ Route::get("/hello/array", [App\Http\Controllers\HelloController::class, "array"
 Route::get("/post/{id?}", [App\Http\Controllers\HelloController::class, "post"]);
 
 Route::get("/about", [App\Http\Controllers\HelloController::class, "about"]);
+
+Route::resource('apartments', ApartmentController::class);
