@@ -22,7 +22,9 @@ class TaskFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'title' => $this->faker->realText(30),
+            'detail' => $this->faker->realText(60),
+            'due_date' => $this->faker->dateTimeBetween('-15 days', '+15 days')->format('Y-m-d H:i:s')
         ];
     }
 }
