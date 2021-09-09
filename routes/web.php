@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApartmentController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,3 +31,4 @@ Route::get("/about", [App\Http\Controllers\HelloController::class, "about"]);
 Route::get('apartments/{apartment}/rooms/create', [ApartmentController::class, 'createRoom'])->name('apartments.rooms.create');
 Route::resource('apartments', ApartmentController::class);
 Route::resource('rooms', RoomController::class);
+Route::resource('tasks', TaskController::class);
