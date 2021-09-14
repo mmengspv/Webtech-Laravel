@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -41,7 +42,27 @@ class TaskController extends Controller
         $task->detail = $request->input('detail');
         $task->due_date = $request->input('due_date');
         $task->save();
+
+        $tags = trim($request->input('tags'));
+        $this->updateTaskTag($task, $tags);
+
         return redirect()->route('tasks.index');
+    }
+
+    private function updateTaskTag($task, $tagWithComma)
+    {
+        if ($tagWithComma) {
+            $tag_array = [];
+            $tagWithComma = explode(',', $tagWithComma);
+            foreach ($tagWithComma as $tag_name) {
+                $tag_name = trim($tag_name);
+                if ($tag_name) {
+                    $tag = Tag::firstOrCreate(['name' => $tag_name]);
+                    array_push($tag_array, $tag->id);
+                }
+            }
+            $task->tags()->sync($tag_array);
+        }
     }
 
     /**
@@ -80,6 +101,10 @@ class TaskController extends Controller
         $task->detail = $request->input('detail');
         $task->due_date = $request->input('due_date');
         $task->save();
+
+        $tags = trim($request->input('tags'));
+        $this->updateTaskTag($task, $tags);
+
         return redirect()->route('tasks.show', ['task' => $task->id]);
     }
 

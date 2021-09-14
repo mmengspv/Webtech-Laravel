@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApartmentController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,3 +33,6 @@ Route::get('apartments/{apartment}/rooms/create', [ApartmentController::class, '
 Route::resource('apartments', ApartmentController::class);
 Route::resource('rooms', RoomController::class);
 Route::resource('tasks', TaskController::class);
+Route::resource('tags', TagController::class);
+
+Route::get('tag/{slug}', [TagController::class, 'showBySlug'])->name('tags.slug');

@@ -18,6 +18,11 @@
             <label for="due_date">Due_date : </label>
             <input type="date" name="due_date" value="{{$task->due_date->format('Y-m-d')}}" required>     
         </div>
+
+        <div class="mb-4">
+            <label for="tags">Tags (separated with comma)</label>
+            <input name="tags" type="text" value="{{$task->tag_names}}" class="border-2 px-2 py-1 w-full" autocomplete="off">
+        </div>
         
         <button type="submit">Edit</button>
     </form>
