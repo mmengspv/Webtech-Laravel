@@ -7,14 +7,24 @@
         @method('PUT')
         <div>
             <label for="name">Apartment Name</label>
-            <input type="text" name="name" value="{{$apartment->name}}">
+            <input type="text" name="name" value="{{old('name', $apartment->name)}}" class="border-2 @error('name') border-red-400 @enderror" autocomplete="off">
+            @error('name')
+                <p class="text-red-600">
+                    {{$message}}
+                </p>
+            @enderror
         </div>
 
         <div>
             <label for="floors">Floors</label>
-            <input type="number" min="1" name="floors" value="{{$apartment->floors}}">
+            <input type="number" min="1" name="floors" value="{{old('floors', $apartment->floors)}}" class="border-2 @error('floors') border-red-400 @enderror" autocomplete="off">
+            @error('floors')
+                <p class="text-red-600">
+                    {{$message}}
+                </p>
+            @enderror
         </div>
-        <button type="submit">Edit Apartment</button>
+        <button type="submit" class="border-2 px-3">Edit Apartment</button>
     </form>
 
     <hr>

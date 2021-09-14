@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ApartmentRequest;
 use App\Models\Apartment;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ApartmentController extends Controller
 {
@@ -37,17 +40,27 @@ class ApartmentController extends Controller
     public function createRoom($apartment_id)
     {
         $apartment = Apartment::findOrFail($apartment_id);
-        return view('apartments.create-room', ['apartment' => $apartment, 'room_types' => Room::$room_types]);
+
+        $room_types = Room::$room_types;
+        array_push($room_types, 'EXTRA');
+
+        return view('apartments.create-room', ['apartment' => $apartment, 'room_types' => $room_types]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  ApartmentRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ApartmentRequest $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => [
+                Rule::unique('apartments'),
+            ],
+        ])->validate();
+
         $apartments = new Apartment();
         $apartments->name = $request->input('name');
         $apartments->floors = $request->input('floors');
@@ -82,14 +95,20 @@ class ApartmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  ApartmentRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ApartmentRequest $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => [
+                Rule::unique('apartments')->ignore($id),
+            ],
+        ])->validate();
+
         $apartment = Apartment::findOrFail($id);
-        $apartment->name = $request->input('name');
+        $apartment->name = $request->input('name'); // can use validated['name']
         $apartment->floors = $request->input("floors");
         $apartment->save();
         return redirect()->route('apartments.show', ['apartment' => $id]);

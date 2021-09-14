@@ -9,7 +9,6 @@
 
     <hr>
     <div class="my-2">
-        <a class="bg-blue-400 hover:bg-blue-200 px-4 py-2">Add Room</a>
         <a href="{{route('apartments.edit', ['apartment' => $apartment->id])}}">Edit this apartment</a>
     </div>
 
