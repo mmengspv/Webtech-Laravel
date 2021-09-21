@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskRequest;
 use App\Models\Tag;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class TaskController extends Controller
 {
@@ -35,8 +38,9 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TaskRequest $request)
     {
+        $validated = $request->validate();
         $task = new Task();
         $task->title = $request->input('title');
         $task->detail = $request->input('detail');
@@ -94,8 +98,10 @@ class TaskController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(TaskRequest $request, Task $task)
     {
+        $validated = $request->validate();
+
         // $task->title = $request->input('title');
         $task->title = $request->input('title');
         $task->detail = $request->input('detail');
