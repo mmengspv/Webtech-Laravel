@@ -6,6 +6,8 @@ use App\Http\Requests\ApartmentRequest;
 use App\Models\Apartment;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -18,7 +20,16 @@ class ApartmentController extends Controller
      */
     public function index()
     {
-        $apartments = Apartment::with('rooms')->get();
+        if (Auth::check()) {
+            if (Auth::user()->isRole('OFFICER')) {
+                $apartments = Apartment::whereUserId(Auth::id())->with('rooms')->get();
+            } else {
+                $apartments = Apartment::with('rooms')->get();
+            }
+        } else {
+            $apartments = Apartment::with('rooms')->get();
+        }
+
         return view("apartments.index", ['apartments' => $apartments]);
     }
 
@@ -29,6 +40,10 @@ class ApartmentController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Apartment::class);
+        // if (Auth::user()->cannot('create', Apartment::class)) {
+        //     return redirect()->route('apartments.index');
+        // }
         return view('apartments.create');
     }
 
@@ -40,6 +55,7 @@ class ApartmentController extends Controller
     public function createRoom($apartment_id)
     {
         $apartment = Apartment::findOrFail($apartment_id);
+        $this->authorize('update', $apartment);
 
         $room_types = Room::$room_types;
         array_push($room_types, 'EXTRA');
@@ -55,6 +71,7 @@ class ApartmentController extends Controller
      */
     public function store(ApartmentRequest $request)
     {
+        $this->authorize('create', Apartment::class);
         $validator = Validator::make($request->all(), [
             'name' => [
                 Rule::unique('apartments'),
@@ -77,6 +94,7 @@ class ApartmentController extends Controller
     public function show($id)
     {
         $apartment = Apartment::with('rooms')->findOrFail($id);
+        $this->authorize('view', $apartment);
         return view('apartments.show', ['apartment' => $apartment]);
     }
 
@@ -89,6 +107,7 @@ class ApartmentController extends Controller
     public function edit($id)
     {
         $apartment = Apartment::findOrFail($id);
+        $this->authorize('update', $apartment);
         return view('apartments.edit', ['apartment' => $apartment]);
     }
 
@@ -101,13 +120,14 @@ class ApartmentController extends Controller
      */
     public function update(ApartmentRequest $request, $id)
     {
+        $apartment = Apartment::findOrFail($id);
+        $this->authorize('update', $apartment);
         $validator = Validator::make($request->all(), [
             'name' => [
                 Rule::unique('apartments')->ignore($id),
             ],
         ])->validate();
 
-        $apartment = Apartment::findOrFail($id);
         $apartment->name = $request->input('name'); // can use validated['name']
         $apartment->floors = $request->input("floors");
         $apartment->save();
@@ -123,6 +143,7 @@ class ApartmentController extends Controller
     public function destroy(Request $request, $id)
     {
         $apartment = Apartment::findOrFail($id);
+        $this->authorize('delete', $apartment);
         if ($apartment->name === $request->input('destroy')) {
             $apartment->delete();
             return redirect()->route('apartments.index');

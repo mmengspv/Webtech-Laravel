@@ -2,7 +2,9 @@
 
 @section("content")
     <h1 class="text-5xl">Apartment List</h1>
-    <a href="{{route('apartments.create')}}">+ New Apartment</a>
+    @can('create', Apartment::class)
+        <a href="{{route('apartments.create')}}">+ New Apartment</a>
+    @endcan
     <table class="table border-grey-200">
         <thead>
             <tr>
